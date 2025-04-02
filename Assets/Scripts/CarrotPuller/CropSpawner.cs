@@ -4,9 +4,9 @@ using Random = UnityEngine.Random;
 
 namespace CarrotPuller
 {
-    public class CarrotSpawner : MonoBehaviour
+    public class CropSpawner : MonoBehaviour
     {
-        [SerializeField] private Carrot _carrotPrefab;
+        [SerializeField] private Crop cropPrefab;
         [Space] 
         [Tooltip("Number of carrots that will be spawned at start up")]
         [Range(0, 6)] 
@@ -80,17 +80,17 @@ namespace CarrotPuller
             }
         
             //TODO: If there is time add pooling
-            var carrot = Instantiate(_carrotPrefab, _carrotSpawnPoints[spawnPointIndex].position, Quaternion.identity);
+            var carrot = Instantiate(cropPrefab, _carrotSpawnPoints[spawnPointIndex].position, Quaternion.identity);
             carrot.Constructor(this, spawnPointIndex);
             _currentNumberOfCarrots++;
             _freeSpawnPoints[spawnPointIndex] = false;
         }
 
-        public void CarrotPulled(Carrot carrot)
+        public void CarrotPulled(Crop crop)
         {
             _currentNumberOfCarrots--;
             _spawnTimer = 0;
-            _freeSpawnPoints[carrot.FieldsIndex] = true;
+            _freeSpawnPoints[crop.FieldsIndex] = true;
             if (_minNumberOfCarrots >= _currentNumberOfCarrots)
             {
                 SpawnCarrot();

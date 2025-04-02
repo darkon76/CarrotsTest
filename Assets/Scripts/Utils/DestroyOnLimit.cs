@@ -9,6 +9,7 @@ namespace Utils
         {
             if (transform.position.y < _limitY)
             {
+                //TODO: If have time add a pool manager.
                 Destroy(gameObject);
             }
         }

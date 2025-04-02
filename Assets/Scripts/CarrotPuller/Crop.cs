@@ -3,15 +3,15 @@ using UnityEngine.EventSystems;
 
 namespace CarrotPuller
 {
-    public class Carrot: MonoBehaviour, IDragHandler, IEndDragHandler, IPointerClickHandler
+    public class Crop: MonoBehaviour, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
-        private enum CarrotState
+        private enum CropState
         {
             ReadyToHarvest,
             Free,
         }
 
-        private CarrotSpawner _carrotSpawner;
+        private CropSpawner _cropSpawner;
         private int _fieldIndex;
         public int FieldsIndex => _fieldIndex;
         
@@ -26,11 +26,12 @@ namespace CarrotPuller
         [SerializeField] private float _totalForceToHarvest = 50f;
         [SerializeField] private float _totalForceDecayPerSecond = 50f;
         [SerializeField] private Vector3 _harvestDragDirection = Vector3.forward;
+        //Because for some small children is hard to drag, it was added support for clicking. 
         [SerializeField] private float _clickHarvestForce = 25f;
-        [SerializeField] private Vector3 _clickHarvestPluckForce = new Vector3(0,100f,10f);
+        [SerializeField] private Vector3 _clickFreeForce = new Vector3(0,100f,10f); //TODO use a better name.
         
         [Header("Debug")] 
-        [SerializeField] private CarrotState _currentState;
+        [SerializeField] private CropState _currentState;
         [SerializeField] private float _forceApplied;
         [SerializeField] private bool _isDragging;
         [SerializeField] private bool _addDragInertia;
@@ -47,7 +48,7 @@ namespace CarrotPuller
         }
         private void Update()
         {
-            if (_currentState == CarrotState.ReadyToHarvest)
+            if (_currentState == CropState.ReadyToHarvest)
             {
                 if (_isDragging)
                 {
@@ -70,18 +71,18 @@ namespace CarrotPuller
 
         private void CarrotHarvested()
         {
-            _currentState = CarrotState.Free;
+            _currentState = CropState.Free;
             _rigidbody.isKinematic = false;
             //TODO add particles and sound.
-            if (_carrotSpawner != null)
+            if (_cropSpawner != null)
             {
-                _carrotSpawner.CarrotPulled(this);
+                _cropSpawner.CarrotPulled(this);
             }
         }
         
-        public void Constructor(CarrotSpawner carrotSpawner, int index)
+        public void Constructor(CropSpawner cropSpawner, int index)
         {
-            _carrotSpawner = carrotSpawner;
+            _cropSpawner = cropSpawner;
             _fieldIndex = index;
         }
 
@@ -99,9 +100,9 @@ namespace CarrotPuller
 
             switch (_currentState)
             {
-                case CarrotState.ReadyToHarvest:
+                case CropState.ReadyToHarvest:
                     break;
-                case CarrotState.Free:
+                case CropState.Free:
                     _rigidbody.useGravity = false;
                     break;
             }
@@ -120,9 +121,9 @@ namespace CarrotPuller
             
             switch (_currentState)
             {
-                case CarrotState.ReadyToHarvest:
+                case CropState.ReadyToHarvest:
                     break;
-                case CarrotState.Free:
+                case CropState.Free:
                     _rigidbody.useGravity = true;
                     _addDragInertia = true;
                     break;
@@ -143,9 +144,9 @@ namespace CarrotPuller
                         
             switch (_currentState)
             {
-                case CarrotState.ReadyToHarvest:
+                case CropState.ReadyToHarvest:
                     break;
-                case CarrotState.Free:
+                case CropState.Free:
                     FreeDrag();
                     break;
             }
@@ -159,19 +160,20 @@ namespace CarrotPuller
         {
             switch (_currentState)
             {
-                case CarrotState.ReadyToHarvest:
+                case CropState.ReadyToHarvest:
                 {
                     _forceApplied += _clickHarvestForce;
                     if (_forceApplied >= _totalForceToHarvest)
                     {
                         CarrotHarvested();
                         _rigidbody.useGravity = true;
-                        _rigidbody.AddForce(_clickHarvestPluckForce, ForceMode.Force);
+                        _rigidbody.AddForce(_clickFreeForce, ForceMode.Force);
                     }
                     break;
                 }
                     
-                case CarrotState.Free:
+                case CropState.Free:
+                    _rigidbody.AddForce(_clickFreeForce, ForceMode.Force);
                     break;
             }
         }
