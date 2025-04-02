@@ -38,6 +38,7 @@ namespace CarrotPuller
         [SerializeField] private bool _addDragInertia;
         [SerializeField] private Vector3 _dragTargetPosition;
         [SerializeField] private Vector3 _lastPosition;
+        [SerializeField] private Quaternion _startingOrientation;
         
         private void Awake()
         {
@@ -52,12 +53,17 @@ namespace CarrotPuller
                 _animatorHandler = GetComponent<CropAnimatorHandler>();
             }
         }
+        private void Start()
+        {
+            _startingOrientation = transform.rotation;
+        }
         private void Update()
         {
             if (_currentState == CropState.ReadyToHarvest)
             {
                 if (_isDragging)
                 {
+                    //TODO: Instead of drag target it should be at the crop plane to make it look nicer.
                     var dragForce = Vector3.Magnitude(_dragTargetPosition- transform.position);
                     _forceApplied += dragForce;
                     _animatorHandler.PullingForce(dragForce);
@@ -71,8 +77,8 @@ namespace CarrotPuller
                 {
                     _forceApplied -= _totalForceDecayPerSecond * Time.deltaTime;
                     _forceApplied = Mathf.Max(0, _forceApplied);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, _startingOrientation, Time.deltaTime * 10f);
                 }
-
             }
         }
 
@@ -109,7 +115,9 @@ namespace CarrotPuller
             switch (_currentState)
             {
                 case CropState.ReadyToHarvest:
-
+                   
+                    transform.LookAt(_dragTargetPosition, Vector3.up);
+                    transform.Rotate(Vector3.right * 90);
                     break;
                 case CropState.Free:
                     _rigidbody.useGravity = false;
