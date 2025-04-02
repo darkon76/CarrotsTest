@@ -91,7 +91,7 @@ namespace CarrotPuller
             _currentNumberOfCarrots--;
             _spawnTimer = 0;
             _freeSpawnPoints[crop.FieldsIndex] = true;
-            if (_minNumberOfCarrots >= _currentNumberOfCarrots)
+            if (_minNumberOfCarrots > _currentNumberOfCarrots)
             {
                 SpawnCarrot();
             }
