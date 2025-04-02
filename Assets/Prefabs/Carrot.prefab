@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8705677074302428580}
   - component: {fileID: 2402473165825177833}
   - component: {fileID: 8738551512119199274}
+  - component: {fileID: 852301596451282594}
   m_Layer: 0
   m_Name: Carrot
   m_TagString: Untagged
@@ -80,6 +81,11 @@ MonoBehaviour:
   _rigidbody: {fileID: 0}
   _groundDragOffset: 0.5
   _dragInertiaMultiplier: 5
+  _totalForceToHarvest: 25
+  _totalForceDecayPerSecond: 5
+  _harvestDragDirection: {x: 0, y: 0, z: 1}
+  _clickHarvestForce: 20
+  _clickHarvestPluckForce: {x: 0, y: 100, z: 10}
   _currentState: 0
   _forceApplied: 0
   _isDragging: 0
@@ -137,6 +143,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70f01801112f436cba7fd7aa74759515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &852301596451282594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7081502136807513946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc51abba17884d1c839158231cea97d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _limitY: -10
 --- !u!1001 &879881106012141979
 PrefabInstance:
   m_ObjectHideFlags: 0

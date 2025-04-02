@@ -44,7 +44,8 @@ namespace CarrotPuller
             {
                 _freeSpawnPoints[i] = true;
             }
-
+            
+            //TODO if there is time do a nicer sequence.
             for (int i = 0; i < _startingNumberOfCarrots; i++)
             {
                 SpawnCarrot(); 
@@ -80,15 +81,16 @@ namespace CarrotPuller
         
             //TODO: If there is time add pooling
             var carrot = Instantiate(_carrotPrefab, _carrotSpawnPoints[spawnPointIndex].position, Quaternion.identity);
-            carrot.Constructor(this);
+            carrot.Constructor(this, spawnPointIndex);
             _currentNumberOfCarrots++;
             _freeSpawnPoints[spawnPointIndex] = false;
         }
 
-        private void CarrotPulled(Carrot carrot)
+        public void CarrotPulled(Carrot carrot)
         {
             _currentNumberOfCarrots--;
             _spawnTimer = 0;
+            _freeSpawnPoints[carrot.FieldsIndex] = true;
             if (_minNumberOfCarrots >= _currentNumberOfCarrots)
             {
                 SpawnCarrot();
