@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 namespace CarrotPuller
 {
-    public class Crop: MonoBehaviour, IDragHandler, IEndDragHandler, IPointerClickHandler
+    public class Crop: MonoBehaviour, IDragHandler,IBeginDragHandler, IEndDragHandler, IPointerClickHandler
     {
         private enum CropState
         {
@@ -19,6 +19,7 @@ namespace CarrotPuller
 
         [Header("References")] 
         [SerializeField] private Rigidbody _rigidbody;
+        [SerializeField] private CropAnimatorHandler _animatorHandler;
         [Header("Settings")] 
         [SerializeField] private float _groundDragOffset = .25f;
         [SerializeField] private float _dragInertiaMultiplier = 1f;
@@ -45,6 +46,11 @@ namespace CarrotPuller
             {
                 _rigidbody = GetComponent<Rigidbody>();
             }
+
+            if (_animatorHandler == null)
+            {
+                _animatorHandler = GetComponent<CropAnimatorHandler>();
+            }
         }
         private void Update()
         {
@@ -52,8 +58,9 @@ namespace CarrotPuller
             {
                 if (_isDragging)
                 {
-                    var dragForce = Mathf.Abs(Vector3.Dot(_harvestDragDirection, _dragTargetPosition- transform.position));
+                    var dragForce = Vector3.Magnitude(_dragTargetPosition- transform.position);
                     _forceApplied += dragForce;
+                    _animatorHandler.PullingForce(dragForce);
                                     
                     if (_forceApplied >= _totalForceToHarvest)
                     {
@@ -78,6 +85,7 @@ namespace CarrotPuller
             {
                 _cropSpawner.CarrotPulled(this);
             }
+            _animatorHandler.Pulling(false);
         }
         
         public void Constructor(CropSpawner cropSpawner, int index)
@@ -101,6 +109,7 @@ namespace CarrotPuller
             switch (_currentState)
             {
                 case CropState.ReadyToHarvest:
+
                     break;
                 case CropState.Free:
                     _rigidbody.useGravity = false;
@@ -122,6 +131,7 @@ namespace CarrotPuller
             switch (_currentState)
             {
                 case CropState.ReadyToHarvest:
+                    _animatorHandler.Pulling(false);
                     break;
                 case CropState.Free:
                     _rigidbody.useGravity = true;
@@ -158,6 +168,11 @@ namespace CarrotPuller
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            _animatorHandler.Clicked();
+            if (_isDragging)
+            {
+                return;
+            }
             switch (_currentState)
             {
                 case CropState.ReadyToHarvest:
@@ -175,6 +190,14 @@ namespace CarrotPuller
                 case CropState.Free:
                     _rigidbody.AddForce(_clickFreeForce, ForceMode.Force);
                     break;
+            }
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            if (_currentState == CropState.ReadyToHarvest)
+            {
+                _animatorHandler.Pulling(true);
             }
         }
     }

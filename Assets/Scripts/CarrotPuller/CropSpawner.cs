@@ -80,8 +80,8 @@ namespace CarrotPuller
             }
         
             //TODO: If there is time add pooling
-            var carrot = Instantiate(cropPrefab, _carrotSpawnPoints[spawnPointIndex].position, Quaternion.identity);
-            carrot.Constructor(this, spawnPointIndex);
+            var crop = Instantiate(cropPrefab, _carrotSpawnPoints[spawnPointIndex].position, Quaternion.identity);
+            crop.Constructor(this, spawnPointIndex);
             _currentNumberOfCarrots++;
             _freeSpawnPoints[spawnPointIndex] = false;
         }

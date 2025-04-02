@@ -787,7 +787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53bdfc9efb858dd4fac2c86b3bee3cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _carrotPrefab: {fileID: 2429185925599550408, guid: 07af72fa9431dc145b05a3ab0d22c590,
+  cropPrefab: {fileID: 2429185925599550408, guid: 07af72fa9431dc145b05a3ab0d22c590,
     type: 3}
   _startingNumberOfCarrots: 6
   _maxNumberOfCarrots: 6
