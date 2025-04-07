@@ -78,7 +78,7 @@ namespace CarrotPuller
                     {
                         _forceApplied -= _settings.TotalForceDecayPerSecond * Time.deltaTime;
                         _forceApplied = Mathf.Max(0, _forceApplied);
-                        transform.rotation = Quaternion.Slerp(transform.rotation, _startingOrientation, Time.deltaTime * 10f);
+                        _mainRB.rotation = Quaternion.Slerp(_mainRB.rotation, _startingOrientation, Time.deltaTime * 10f);
                     }
                     break;
                 case CropState.Free:
@@ -106,7 +106,6 @@ namespace CarrotPuller
                     if (_isDragging)
                     {
                         _mainRB.position = _dragTargetPosition;
-                        Debug.Log($"Dragging {_dragTargetPosition} d {_isDragging} k {_mainRB.isKinematic} g {_mainRB.useGravity}");
                     }
                     break;
                 default:
@@ -147,8 +146,16 @@ namespace CarrotPuller
             switch (_currentState)
             {
                 case CropState.ReadyToHarvest:
+
+                    var pullPlane = new Plane(Vector3.up, -_settings.PullPlaneOffset);
+                    if (pullPlane.Raycast(ray, out var enterPull))
+                    {
+                        var pullPoint = ray.GetPoint(enterPull);
+                        _mainRB.transform.LookAt(pullPoint, Vector3.up);
+                        _mainRB.transform.Rotate(Vector3.right, 90f);
+                    }
                     //Rotate to drag point
-                    transform.LookAt(_dragTargetPosition, Vector3.up);
+
                     break;
                 case CropState.Free:
                     break;

@@ -8,6 +8,7 @@ namespace SO
         [Header("Harvest")] 
         [SerializeField] private float _totalForceToHarvest = 100f;
         [SerializeField] private float _totalForceDecayPerSecond = 50f;
+        [SerializeField] private float _pullPlaneOffset = .1f;
         [Header("Drag")]
         [SerializeField] private float _groundDragOffset = .25f;
         [SerializeField] private float _dragInertiaMultiplier = 5f;
@@ -22,6 +23,7 @@ namespace SO
         public float TotalForceDecayPerSecond => _totalForceDecayPerSecond;
         public float ClickHarvestForce => _clickHarvestForce;
         public Vector3 ClickForce => _clickForce;
+        public float PullPlaneOffset => _pullPlaneOffset;
         
     }
 }
