@@ -15,6 +15,6 @@ MonoBehaviour:
   _totalForceToHarvest: 100
   _totalForceDecayPerSecond: 50
   _groundDragOffset: 0.75
-  _dragInertiaMultiplier: 5
+  _dragInertiaMultiplier: 1000
   _clickHarvestForce: 200
   _clickForce: {x: 0, y: 50, z: 10}
