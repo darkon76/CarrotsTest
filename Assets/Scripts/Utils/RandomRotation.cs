@@ -7,7 +7,7 @@ namespace Utils
         void Awake()
         {
             var randomAngle = Random.Range(0f, 360f);
-            transform.Rotate(Vector3.up, randomAngle);
+            transform.Rotate(Vector3.forward, randomAngle);
         }
     }
 }

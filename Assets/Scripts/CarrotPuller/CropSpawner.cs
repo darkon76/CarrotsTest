@@ -6,7 +6,7 @@ namespace CarrotPuller
 {
     public class CropSpawner : MonoBehaviour
     {
-        [SerializeField] private Crop cropPrefab;
+        [SerializeField] private CropController cropPrefab;
         [Space] 
         [Tooltip("Number of carrots that will be spawned at start up")]
         [Range(0, 6)] 
@@ -48,7 +48,7 @@ namespace CarrotPuller
             //TODO if there is time do a nicer sequence.
             for (int i = 0; i < _startingNumberOfCarrots; i++)
             {
-                SpawnCarrot(); 
+                SpawnCrop(); 
             }
         }
 
@@ -59,11 +59,11 @@ namespace CarrotPuller
             if (_spawnTimer >= _spawnCDSeconds)
             {
                 _spawnTimer -= _spawnCDSeconds;
-                SpawnCarrot();
+                SpawnCrop();
             }
         }
     
-        private void SpawnCarrot()
+        private void SpawnCrop()
         {
             if (_currentNumberOfCarrots >= _maxNumberOfCarrots)
             {
@@ -80,20 +80,22 @@ namespace CarrotPuller
             }
         
             //TODO: If there is time add pooling
-            var crop = Instantiate(cropPrefab, _carrotSpawnPoints[spawnPointIndex].position, Quaternion.identity);
+
+            var spawnPoint = _carrotSpawnPoints[spawnPointIndex];
+            var crop = Instantiate(cropPrefab, spawnPoint.position, spawnPoint.rotation );
             crop.Constructor(this, spawnPointIndex);
             _currentNumberOfCarrots++;
             _freeSpawnPoints[spawnPointIndex] = false;
         }
 
-        public void CarrotPulled(Crop crop)
+        public void CropPulled(CropController crop)
         {
             _currentNumberOfCarrots--;
             _spawnTimer = 0;
             _freeSpawnPoints[crop.FieldsIndex] = true;
             if (_minNumberOfCarrots > _currentNumberOfCarrots)
             {
-                SpawnCarrot();
+                SpawnCrop();
             }
         }
     }
